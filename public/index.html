@@ -32,7 +32,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse" aria-expanded="false" style="height: 0px;">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href=""><svg aria-hidden="true" class="octicon octicon-mark-github" height="20" version="1.1" viewBox="0 0 16 16" width="48"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></li>
+            <li><a href="https://github.com/kimolalekan/Casty" ><svg aria-hidden="true" class="octicon octicon-mark-github" height="20" version="1.1" viewBox="0 0 16 16" width="48"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg></a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -41,28 +41,35 @@
     <!-- Begin page content -->
     <div class="container">
       <span class="space"></span>
-      <div class="col-md-6 col-md-offset-2">
+      <div class="col-md-6 col-md-offset-3">
+        <div class="text-center loader">
+          <img src="loader.svg" />
+          <p class="loader-text">Generating PDF file...</p>
+          <span class="space-20"></span>
+        </div>
       <div class="input-group">
-        <span class="input-group-addon">http://</span>
-      <input type="text" id="url" class="form-control">
+      <input type="url" id="url" class="form-control input-lg" placeholder="http://">
       <span class="input-group-btn">
-        <button class="btn btn-default" id="shot" type="button">Go!</button>
+        <button class="btn btn-default btn-lg" id="shot" type="button">Take Shot!</button>
       </span>
     </div>
 
-    <div class="center">
+    <div class="text-center">
     <span class="space-20"></span>
-    <div class="btn-group" data-toggle="buttons">
+    <div class="btn-group hidden" data-toggle="buttons">
   <label class="btn btn-default active">
-    <input type="radio" value="pdf" name="file" id="option1" autocomplete="off" checked> pdf
+    <input type="radio" value="pdf" name="file" id="option1"> pdf
   </label>
   <label class="btn btn-default">
-    <input type="radio" value="png" name="file" id="option2" autocomplete="off"> png
+    <input type="radio" value="png" name="file" id="option2"> png
   </label>
   <label class="btn btn-default">
-    <input type="radio" value="jpg" name="file" id="option3" autocomplete="off"> jpg
+    <input type="radio" value="jpg" name="file" id="option3"> jpg
   </label>
 </div>
+
+<span class="space-20"></span>
+<p class="rdf"></p>
 </div>
 
   </div>
@@ -83,24 +90,31 @@
     <script>
      $(function(){
 
-       //Check if the url has FTP, HTTP or HTTPS protocol
-       function isHTTP(url) {
-          if (!/^(f|ht)tps?:\/\//i.test(url)) {
-             url = "http://" + url;
-             url = url.toLowerCase();
-          }
-          return url;
-       }
-
-
        $('#shot').on('click', function()
      {
       var file = $('input[name=file]').val();
       var url = $('#url').val();
-      url = isHTTP(url);
+       if(url){
+         $('.loader').show();
+         $('#url, input, #shot').attr('disabled');
+         $('.rdf').html('');
 
-      console.log(file);
+          url = encodeURIComponent(url);
+      var src = 'http://localhost:5050/api/v1/takeshot/'+url+'/' + file;
 
+          fetch(src, {
+       method: 'GET',
+       headers: {
+     'Accept': 'application/json',
+     'Content-Type': 'application/json',
+   }
+     }).then(function(response) {
+      return response.json();
+     }).then(function(json){
+        $('.loader').hide();
+       $('.rdf').html('<a href="/api/v1/screenshot/'+json.file+'" target="_blank" class="btn btn-default btn-lg">Download File</a>');
+    });
+        }
      });
 
 

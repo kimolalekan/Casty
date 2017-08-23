@@ -1,6 +1,7 @@
 const async = require('async');
 const phantom = require('phantom');
 const express = require('express');
+const fs = require('fs');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config();
@@ -16,6 +17,9 @@ app.use(cors());
 
 //Add new user
 app.route('/api/v1/takeshot/:url/:file').get(takeShot);
+
+//Load pdf
+app.route('/api/v1/screenshot/:file').get(getScreenshot);
 
 
 
@@ -36,14 +40,14 @@ function takeShot(req, res)
  (async function() {
     const instance = await phantom.create();
     const page = await instance.createPage();
-
+    await page.setting('userAgent', 'Casty.io');
     await page.property('viewportSize', {width: 1024, height: 600});
     const status = await page.open(url);
 
     let f = Date.now();
-    await page.render(f + '.' + ext);
+    await page.render('./public/screenshots/' + f + '.' + ext);
 
-    let json = {status: status, url: url, file: f + '.' + ext, credit: 'Powered by SaaS'};
+    let json = {status: status, url: url, file: f + '.' + ext, credit: 'Powered by Casty'};
     res.send(json);
 
     await instance.exit();
@@ -51,6 +55,19 @@ function takeShot(req, res)
 
 }
 
+// Load pdf file
+function getScreenshot (req, res, next) {
+
+  let file = req.params.file;
+  var stream = fs.ReadStream('./public/screenshots/' + file);
+  var filename = "file.pdf";
+  // Ideally this should strip them
+
+  res.setHeader('Content-disposition', 'inline; filename="' + filename + '"');
+  res.setHeader('Content-type', 'application/pdf');
+
+  stream.pipe(res);
+}
 
 
 //Page-not-found middleware

@@ -1,10 +1,9 @@
-## Casty ##
+## Casty
 
 ** Description: ** Screenshot as a Service
 
 ** License: ** MIT
 
-![Casty](/path/to/image.jpg "Casty")
 
 ** Installation **
 

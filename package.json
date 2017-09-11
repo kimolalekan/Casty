@@ -5,7 +5,7 @@
   "main": "app.js",
   "git": "https://github.com/kimolalekan/Casty.git",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "pm2 start app.js -n 'Casty'"
   },
   "author": "Olalekan Animashaun",
   "license": "MIT",
@@ -15,6 +15,7 @@
     "dotenv": "^4.0.0",
     "express": "^4.15.4",
     "expressjs": "^1.0.1",
-    "phantom": "^4.0.5"
+    "phantom": "^4.0.5",
+    "pm2": "^2.6.1"
   }
 }

@@ -1,11 +1,11 @@
 ## Casty
 
-** Description: ** Screenshot as a Service
+**Description:** Screenshot as a Service
 
-** License: ** MIT
+**License:** MIT
 
 
-** Installation **
+**Installation**
 
 ```bash
 $ git clone https://github.com/kimolalekan/Casty
@@ -13,7 +13,7 @@ $ git clone https://github.com/kimolalekan/Casty
 $ npm install
 ```
 
-** Example API url **
+**Example API url**
 
 ```
   http://your-server.com:5050/api/v1/takeshot/godaddy.com/png
@@ -28,6 +28,6 @@ $ npm install
 
 ```
 
-** Contributor **
+**Contributor**
 
 Olalekan Animashaun

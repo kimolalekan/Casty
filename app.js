@@ -15,10 +15,10 @@ app.use(bodyParser.json());
 app.use(cors());
 
 //Add new user
-app.route("/api/v1/takeshot/:url/:file").get(takeShot);
+app.route("/v1/takeshot/:url/:file").get(takeShot);
 
 //Load pdf
-app.route("/api/v1/screenshot/:file").get(getScreenshot);
+app.route("/v1/screenshot/:file").get(getScreenshot);
 
 //If we reach this middleware the route could not be handled and must be unknown.
 app.use(handle404);
